@@ -8,6 +8,23 @@ function Results(props){
     const refresh = props.refresh;//when props updates, useEffect is triggered to render list
     const [response, setResponse] = useState({});
     const [renderList, setRenderList] = useState((<div></div>))
+
+    const getFavorite =() =>{
+        try {
+            const res = localStorage.getItem("mediaScoutFavorites");
+            if (res !== null){
+                const data = JSON.parse(res);
+                return data;
+            }else{
+                const data = [];
+                return data;
+            }
+        } catch (error) {
+            localStorage.setItem("mediaScoutFavorites","[]");
+            console.log(error);
+            return [];
+        }
+    }
     
     //retrieve list of items from response.json
     const getResponse = async() => {
@@ -16,18 +33,40 @@ function Results(props){
         setResponse(resJson);
     }
 
-    //post new item to favorites.json
-    const setFavorite = async(index) =>{
-        const data = response.results[index];
-        const res = await fetch("/favorite",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data),
-        });
-        const resp = await res.text();
-        alert(resp);
+    //post new item to local storage
+    const setFavorite = (index) =>{
+        const item = response.results[index]
+        const data = getFavorite();
+        let alreadyExists = false;
+        if (data.length !== 0){
+            data.map((element) => {
+                if (element.trackId === item.trackId){
+                    alreadyExists = true;
+                };
+            });
+        }
+        if (alreadyExists){
+            alert("This item is already in your list of favorites.")
+        }else{
+            try {
+                data.push(item);
+                localStorage.setItem("mediaScoutFavorites",JSON.stringify(data));
+                alert("Successfully added to favorites")
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        // const data = response.results[index];
+        // const res = await fetch("/favorite",{
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify(data),
+        // });
+        // const resp = await res.text();
+        // alert(resp);
     }
 
     // get search response on refresh prop update to avoid infinite loop
