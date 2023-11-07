@@ -31,17 +31,16 @@ const getSearch = async (term, media) => {
   }
 };
 
-
 //function to read the response.json file i.e. response from 3rd party server
-const getData = () =>{
+const getData = () => {
   try {
-    const res = fs.readFileSync("response.json")
+    const res = fs.readFileSync("response.json");
     const data = JSON.parse(res);
-    return data
+    return data;
   } catch (error) {
-    return error
+    return error;
   }
-}
+};
 
 // get request to initiate getSearch function and return response
 app.get("/search", (req, resp) => {
@@ -55,19 +54,19 @@ app.get("/search", (req, resp) => {
 app.post("/favorite", (req, resp) => {
   const data = req.body;
   const success = postFavorite(data);
-  if (success){
+  if (success) {
     resp.send("Item added to favorites");
-  }else{
+  } else {
     resp.send("Failed. Item already in favorites");
   }
-})
+});
 
 // get request to return response.json
-app.get("/api", (req,resp) => {
+app.get("/api", (req, resp) => {
   const data = getData();
   resp.send(JSON.stringify(data));
-})
+});
 
 app.listen(port, () => console.log("Listening engaged"));
 
-module.exports = {getSearch};
+module.exports = { getSearch };
