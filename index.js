@@ -43,42 +43,6 @@ const getData = () =>{
   }
 }
 
-//function to read to favorite.json file
-const getFavorite = () => {
-  try {
-    const res = fs.readFileSync("favorite.json");
-    const data = JSON.parse(res);
-    return data
-  } catch (error) {
-    fs.writeFileSync("favorite.json",'[]');
-    console.log(error);
-    return []
-  }
-}
-
-// function to add items to the list inside favorites.json file
-// only unique elements will be accepted
-const postFavorite = (item) => {
-  const data = getFavorite();
-  let alreadyExists = false;
-  data.map((element) => {
-    if (element.trackId === item.trackId){
-      alreadyExists = true;
-    };
-  });
-  if (alreadyExists){
-    return false
-  }else{
-    try {
-      data.push(item);
-      fs.writeFileSync("favorite.json", JSON.stringify(data));
-      return true
-    } catch (error) {
-      console.log(error);
-    }
-  }
-}
-
 // get request to initiate getSearch function and return response
 app.get("/search", (req, resp) => {
   const term = req.query.term;
@@ -98,12 +62,6 @@ app.post("/favorite", (req, resp) => {
   }
 })
 
-// get request to return favorite.json
-app.get("/favorite", (req, resp) => {
-  const data = getFavorite();
-  resp.send(JSON.stringify(data));
-})
-
 // get request to return response.json
 app.get("/api", (req,resp) => {
   const data = getData();
@@ -111,3 +69,5 @@ app.get("/api", (req,resp) => {
 })
 
 app.listen(port, () => console.log("Listening engaged"));
+
+module.exports = {getSearch};

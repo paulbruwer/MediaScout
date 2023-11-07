@@ -56,17 +56,6 @@ function Results(props){
                 console.log(error);
             }
         }
-
-        // const data = response.results[index];
-        // const res = await fetch("/favorite",{
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(data),
-        // });
-        // const resp = await res.text();
-        // alert(resp);
     }
 
     // get search response on refresh prop update to avoid infinite loop
@@ -325,7 +314,7 @@ function Results(props){
         }
         setRenderList(list);
     } catch (error) {
-        console.log(error)
+        console.log("No result yet.")
     }
    }
 
